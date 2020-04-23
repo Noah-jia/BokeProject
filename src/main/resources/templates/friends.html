@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7/dist/css/bootstrap-theme.min.css">
+    <script src="/bootstrap-3.3.7/dist/js/bootstrap.min.js" type="application/javascript"></script>
+<script>
+    function searchuser() {
+            var a=$("#searchAccountId").val();
+            var b=$("#searchuser").val();
+            $.ajax({
+                url: "/searchname",
+                type: "post",
+                timout:1000,
+                data:{"searchname2":$("#searchuser").val()},
+                //data:{"reply":$("#reply").val(),"author":url},
+                dataType: "json",
+                error: function () {
+                    alert("请先登录");
+                },
+                success:function (result) {
+                    $("#searchdiv").removeClass("hidden").addClass("media");
+                    $("#searchusername").text(result.name);
+                    $("#searchuserimg").val(result.avatar_url);
+                    console.log("a:"+"b:");
+                    if(a==b){
+                        $("#adduser").removeClass("btn btn-default").addClass("hidden");
+                    }else {
+                        $("#adduser").removeClass("hidden").addClass("btn btn-default");
+                    }
+                }} )
+    }
+    function adduser() {
+        $.ajax({
+            url: "/addfriend",
+            type: "post",
+            timout:1000,
+            //data:{"reply":$("#reply").val(),"author":url},
+            data:{"searchAccountId":$("#searchuser").val()},
+            dataType: "text",
+            error:function () {
+               alert("方法失败");
+            },
+            success:function (result) {
+                if(result=="false") {
+                    $("#addresult").css("color", "red");
+                    $("#addresult").text("对方已经是好友").toggle(500);
+                }else{
+                   alert("添加成功");
+                    window.location.href="/friendslist";
+                }
+            }
+        })
+    }
+</script>
+</head>
+<body>
+<div th:insert="navigation::nav"></div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row" style="margin-left: 40px; margin-top: 40px">
+        <div class="col-md-6">
+            <input  id="searchuser" type="text" class="form-control"  placeholder="请输入用户名">
+        </div>
+        <div class="col-md-4">
+            <button onclick="searchuser()" type="submit" class="btn btn-default">搜索用户</button>
+         </div>
+        </div>
+        <!--搜索结果-->
+        <div class="hidden" id="searchdiv" style="margin-left: 40px;padding: 20px">
+            <div class="col-md-6">
+            <div class="media-left media-middle">
+                <a>
+                    <img  id="searchuserimg" class="media-object img-rounded" style="height: 50px;width: 50px">
+                </a>
+            </div>
+            <div class="media-body">
+               <a id="searchusername" style="font-size: x-large"></a>
+            </div>
+            </div>
+            <div class="col-md-4">
+            <div>
+                <button id="adduser" onclick="adduser()" class="btn btn-default">添加</button>
+                <span id="addresult"></span>
+                <input class="hidden"  th:value="${session.user.getName()}"  id="searchAccountId"  >
+            </div>
+            </div>
+        </div>
+        <!--好友列表-->
+    </div>
+    <div class="col-md-6">
+        <h3 style="margin-top: 40px;margin-left: 170px">好友列表</h3>
+        <div class="media" th:each="friend : ${friends}" style="margin-left: 150px;padding: 20px">
+            <div class="media-left media-middle">
+                <a href="#">
+                    <img th:if="${friend.getAccountId()}!=${session.user.getAccountId()}" class="media-object img-rounded"
+                         th:src="${friend.getAvatar_url()}"
+                         src="https://avatars1.githubusercontent.com/u/50282305?v=4" style="height: 50px;width: 50px">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 th:if="${friend.getAccountId()}!=${session.user.getAccountId()}"  th:text="${friend.getName()}"></h4>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

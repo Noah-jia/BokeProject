@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7/dist/css/bootstrap-theme.min.css">
+    <meta charset="UTF-8">
+    <script src="/http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/bootstrap-3.3.7/dist/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<div th:insert="navigation::nav"></div>
+<div class="page-header">
+    <h1>Example page header <small th:text="${session.user.getName()}"></small></h1>
+</div>
+<div th:if="${userInfo==null}"  class="alert alert-success" role="alert" th:text="昵称--+${session.user.getName()}" style="padding: 30px;width: 200px;margin-left: 400px"></div>
+<div th:if="${userInfo==null}"  class="alert alert-success" role="alert" th:text="账户--+${session.user.getAccountId()}" style="padding: 30px;width: 200px;margin-left: 400px"></div>
+<div th:if="${userInfo!=null}"  class="alert alert-success" role="alert" th:text="昵称+${userInfo.getName()}" style="padding: 30px;width: 200px;margin-left: 400px"></div>
+<div th:if="${userInfo!=null}"  class="alert alert-success" role="alert" th:text="账户--+${userInfo.getAccountId()}" style="padding: 30px;width: 200px;margin-left: 400px"></div>
+</div>
+</body>
+</html>

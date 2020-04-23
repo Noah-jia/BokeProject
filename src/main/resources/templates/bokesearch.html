@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7/dist/css/bootstrap-theme.min.css">
+    <script src="/bootstrap-3.3.7/dist/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<div th:insert="navigation::nav"></div>
+<div class="col-md-8">
+    <div class="media" th:each="boke : ${pageInfo2.list}" style="margin-left: 40px;padding: 20px">
+        <div class="media-left media-middle">
+            <a href="#">
+                <img  style="height: 50px;width: 50px" class="media-object" th:src="${boke.user.avatar_url}" src="https://avatars1.githubusercontent.com/u/50282305?v=4" alt="...">
+            </a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading" th:text="${boke.title}"></h4>
+            <td th:text="${boke.user.name}"></td>
+        </div>
+    </div>
+    <nav aria-label="Page navigation" style="margin-left: 40px;padding: 20px">
+        <ul class="pagination">
+            <li>
+                <a th:href="@{/(page=${pageInfo2.pageNum-1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li><a class="page-link" th:href="@{/(page=1)}">1</a></li>
+            <li><a  class="page-link" th:href="@{/(page=2)}">2</a></li>
+            <li><a class="page-link" th:href="@{/(page=3)}">3</a></li>
+            <li><a class="page-link" th:href="@{/(page=4)}">4</a></li>
+            <li><a class="page-link" th:href="@{/(page=5)}">5</a></li>
+            <li>
+                <a th:href="@{/(page=${pageInfo2.pageNum+1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+  <div class="col-md-4">
+    <h3>
+    </h3>
+</div>
+</body>
+</html>

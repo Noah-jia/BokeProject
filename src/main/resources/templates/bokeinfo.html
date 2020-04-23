@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7/dist/css/bootstrap-theme.min.css">
+    <script src="/bootstrap-3.3.7/dist/js/bootstrap.min.js" type="application/javascript"></script>
+<script>
+   $(document).ready(function(){
+        $("#replybtn").click(function () {
+            var url=window.location.href;
+            var  id=$("#bokeid").val();
+            alert(url);
+              $.ajax({
+                  url: "/reply",
+                  type: "post",
+                  timout:1000,
+                  data:{"reply":$("#reply").val(),"bokeid":id},
+                  //data:{"reply":$("#reply").val(),"author":url},
+                  dataType: "json",
+                  error: function () {
+                          alert("请先登录");
+                  },
+                  success:function (result) {
+                      console.log(result);
+                      var author=null;
+                      var  content=null;
+                      $("#ajaxdiv").removeClass("hidden").addClass("media");
+                      $("#ajaxauthor").text(result["0"].author.name);
+                      $("#ajaxcontent").text(result["0"].content);
+                      $("#ajaximg").text(result["0"].author.avatar_url);
+                  }
+              } )
+        })
+    });
+</script>
+
+
+</head>
+<body>
+<div th:insert="navigation::nav"></div>
+<div class="row">
+    <div class="col-md-8">
+        <div style="margin-left: 40px">
+            <label for="description">博客内容</label>
+            <div style="margin-left: 40px">
+                <div>
+                <h3 th:text="${bokedto.title}" href="/userInfo"  readonly="readonly"  name="title" id="exampleInputEmail1" placeholder="标题"></h3>
+                </div>
+                <textarea    th:text="${bokedto.description}" readonly="readonly"  style="width: 400px;height: 150px" class="bg-success" name="description" id="description"></textarea>
+            </div>
+        </div>
+        <input type="hidden" id="bokeid" th:value="${bokedto.id}">
+        <!--待填充ajax内容-->
+        <div class="hidden" id="ajaxdiv" th:each="reply : ${pagereplylist.list}" style="margin-left: 40px;padding: 20px">
+        <div class="media-left media-middle">
+            <img class="media-object img-rounded" id="ajaximg"
+                 src="https://avatars1.githubusercontent.com/u/50282305?v=4" style="height: 80px;width: 80px">
+        </div>
+            <div class="media-body">
+                <label id="ajaxauthor"></label>
+                <textarea style="width: 50%" id="ajaxcontent"  readonly="readonly" class="form-control"></textarea>
+            </div>
+        </div>
+        <!--已回复内容-->
+        <div class="media" th:each="reply : ${pagereplylist.list}" style="margin-left: 40px;padding: 20px">
+            <div class="media-left media-middle">
+                <img   class="media-object img-rounded"
+                     th:src="${reply.author.avatar_url}"
+                     src="https://avatars1.githubusercontent.com/u/50282305?v=4" style="height: 80px;width: 80px">
+            </div>
+            <div class="media-body">
+                <input class="hidden" name="replyId" th:value="${reply.author.accountId}">
+                <a href="/userInfo" class="glyphicon-user"></a>
+                <label   for="eachreply" th:text="${reply.author.name}"></label>
+                <textarea style="width: 50%" id="eachreply"  readonly="readonly" class="form-control" th:text="${reply.content}"></textarea>
+            </div>
+        </div>
+        <nav aria-label="Page navigation" style="margin-left: 40px;padding: 20px">
+            <ul class="pagination">
+                <li>
+                    <a th:href="@{/(page=${pagereplylist.pageNum-1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li><a class="page-link" th:href="@{/(page=1)}">1</a></li>
+                <li><a  class="page-link" th:href="@{/(page=2)}">2</a></li>
+                <li><a class="page-link" th:href="@{/(page=3)}">3</a></li>
+                <li><a class="page-link" th:href="@{/(page=4)}">4</a></li>
+                <li><a class="page-link" th:href="@{/(page=5)}">5</a></li>
+                <li>
+                    <a th:href="@{/(page=${pagereplylist.pageNum+1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!--正在回复-->
+    <div>
+        <label for="reply">回复内容</label>
+        <textarea  cols="30" rows="10"  aria-multiline="true" style="word-wrap:break-word;word-break: break-all;   width: 200px;height: 300px" class="form-control" name="description" id="reply"></textarea>
+        <button  id="replybtn" type="submit" >回复</button>
+    </div>
+</div>
+</div>
+</body>
+</html>
