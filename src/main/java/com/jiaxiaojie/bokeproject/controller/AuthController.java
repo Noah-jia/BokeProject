@@ -47,8 +47,8 @@ public class AuthController {
         accessTokenDto.setRedirect_uri(clientUri);
         String accessToken=githubProvider.getAccessToken(accessTokenDto);
         GithubUser githubUser=githubProvider.getUser(accessToken);
-        System.out.println(githubUser);
-        System.out.println("草");
+        System.out.println("草拟吗");
+        System.out.println("滚啊");
         if(githubUser!=null){
             User user=new User();
             String token=UUID.randomUUID().toString();
